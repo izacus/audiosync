@@ -131,6 +131,7 @@ def display_spectrogram(X):
     ax = plt.gca()
     ax.set_xlabel("Time")
     ax.set_ylabel("Frequency")
+    plt.show()
 
 
 def demo():
