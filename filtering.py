@@ -41,12 +41,3 @@ def downsample(samples, samplerate, max_frequency):
     decimated_samples = signal.decimate(samples, q).astype(samples.dtype)
     return decimated_samples, samplerate / q
 
-if __name__ == "__main__":
-    (samplerate, samples) = scipy.io.wavfile.read("liberatio.wav")
-    if samples[0].size > 1:
-        samples = remove_channel(samples)
-
-    filtered_audio = band_pass_filter(samples, samplerate, 400, 3000)
-    filtered_audio,samplerate = downsample(filtered_audio, samplerate, 3000)
-    scipy.io.wavfile.write("filtered.wav", samplerate, filtered_audio)
-
