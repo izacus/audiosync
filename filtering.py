@@ -28,7 +28,6 @@ def band_pass_filter(samples, samplerate, low_hz, high_hz):
     worker_pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
     results = worker_pool.map(_do_filter, itertools.izip(samples_list, itertools.repeat(fir_window)))
     filtered_samples = numpy.concatenate(results).astype(samples.dtype)
-    print "Results: ", filtered_samples
     return filtered_samples
 
 def downsample(samples, samplerate, max_frequency):
@@ -37,7 +36,7 @@ def downsample(samples, samplerate, max_frequency):
     while samplerate / (q + 1) > (max_frequency * 2):
         q += 1
 
-    print "Found decimation factor: ", q
+    print "[DECIMATE] Found decimation factor: %s (%s -> %s)" % (q, samplerate, samplerate / q)
     decimated_samples = signal.decimate(samples, q).astype(samples.dtype)
     return decimated_samples, samplerate / q
 
