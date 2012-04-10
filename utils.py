@@ -7,7 +7,7 @@ def get_audio_from_file(filename):
     """
     import pyglet
 
-    source = pyglet.media.load(filename)
+    source = pyglet.media.load(filename, skip_video=True)
     video_ts = source.get_next_video_timestamp()
 
     num_samples = source.duration * source.audio_format.sample_rate * source.audio_format.channels
@@ -20,7 +20,7 @@ def get_audio_from_file(filename):
     counter = 0
     last = 0
     while True:
-        audio_data = source._get_audio_data(8192)
+        audio_data = source.get_audio_data(8192)
 
         if audio_data is None:
             break
