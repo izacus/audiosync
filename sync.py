@@ -1,4 +1,4 @@
-from audiosync import utils, filtering
+from audiosync import utils, filtering, correlate
 
 def preprocess_audio(audio, samplerate):
     """
@@ -8,6 +8,7 @@ def preprocess_audio(audio, samplerate):
     audio, new_samplerate = filtering.downsample(audio, samplerate, 3000)
     return audio, new_samplerate
 
+WINDOW_SIZE = 60    # Search window size in seconds
 
 def find_offset(target, source, source_offset):
     """
@@ -18,17 +19,31 @@ def find_offset(target, source, source_offset):
 
     Returns offset in target file in seconds
     """
-
     if isinstance(target, basestring):
+        print "Target file passed as filepath, loading..."
         target_audio, target_samplerate = utils.get_audio_from_file(target)
         target_audio, target_samplerate = preprocess_audio(target_audio, target_samplerate)
+        print "Loaded."
     else:
         target_audio, target_samplerate = target
 
     if isinstance(source, basestring):
+        print "Source file passed as filepath, loading..."
         source_audio, source_samplerate = utils.get_audio_from_file(source)
         source_audio, source_samplerate = preprocess_audio(source_audio, source_samplerate)
+        print "Done."
     else:
         source_audio, source_samplerate = source
 
     assert target_samplerate == source_samplerate
+
+    # Take 20 second stretch of audio to look for correlation
+    start_index = max(0, (source_offset * source_samplerate) - (WINDOW_SIZE / 2) * source_samplerate)
+    end_index = min(len(source_audio) - 1, (source_offset * source_samplerate) + (WINDOW_SIZE / 2) * source_samplerate)
+    source_slice = source_audio[start_index:end_index]
+    print "Slice ok, correlating..."
+    offset = correlate.get_offset(target_audio, source_slice, source_samplerate)
+
+    # TODO: check why this fix is needed
+    offset = (-offset[0]) - (WINDOW_SIZE / 2)
+    print "Found offset!! ", offset
