@@ -1,10 +1,7 @@
 import multiprocessing
-import scipy
 from scipy import signal
 import itertools
 import numpy
-import time
-from filtering import band_pass_filter, downsample
 
 def _get_correlation(args):
     samples1, samples2 = args
@@ -41,5 +38,3 @@ def get_offset(samples1, samples2, samplerate):
     # 0 offset will have a peak at len(samples2)
     offset = float(len(samples2) - max) / float(samplerate)
     return offset, correlation
-
-
