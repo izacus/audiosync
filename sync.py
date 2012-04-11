@@ -46,4 +46,4 @@ def find_offset(target, source, source_offset):
 
     # TODO: check why this fix is needed
     offset = (-offset[0]) - (WINDOW_SIZE / 2)
-    print "Found offset!! ", offset
+    return offset
