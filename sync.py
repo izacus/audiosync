@@ -8,7 +8,7 @@ def preprocess_audio(audio, samplerate):
     audio, new_samplerate = filtering.downsample(audio, samplerate, 3000)
     return audio, new_samplerate
 
-WINDOW_SIZE = 60    # Search window size in seconds
+WINDOW_SIZE = 120    # Search window size in seconds
 
 def find_offset(target, source, source_offset):
     """
