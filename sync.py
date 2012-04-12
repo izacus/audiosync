@@ -8,7 +8,7 @@ def preprocess_audio(audio, samplerate):
     audio, new_samplerate = filtering.downsample(audio, samplerate, 3000)
     return audio, new_samplerate
 
-WINDOW_SIZE = 120    # Search window size in seconds
+WINDOW_SIZE = 60    # Search window size in seconds
 
 def find_offset(target, source, source_offset):
     """
@@ -38,12 +38,12 @@ def find_offset(target, source, source_offset):
     assert target_samplerate == source_samplerate
 
     # Take 20 second stretch of audio to look for correlation
-    start_index = max(0, (source_offset * source_samplerate) - (WINDOW_SIZE / 2) * source_samplerate)
-    end_index = min(len(source_audio) - 1, (source_offset * source_samplerate) + (WINDOW_SIZE / 2) * source_samplerate)
+    start_index = max(0, (source_offset * source_samplerate) - ((WINDOW_SIZE * source_samplerate) / 2))
+    end_index = min(len(source_audio) - 1, (source_offset * source_samplerate) + ((WINDOW_SIZE * source_samplerate)/ 2))
+
+    print "Start", start_index, "End", end_index
+
     source_slice = source_audio[start_index:end_index]
     print "Slice ok, correlating..."
-    offset = correlate.get_offset(target_audio, source_slice, source_samplerate)
-
-    # TODO: check why this fix is needed
-    offset = (-offset[0]) - (WINDOW_SIZE / 2)
+    offset, correlation = correlate.get_offset(source_slice, target_audio, source_samplerate)
     return offset
