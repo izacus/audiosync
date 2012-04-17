@@ -30,6 +30,10 @@ def band_pass_filter(samples, samplerate, low_hz, high_hz):
     filtered_samples = numpy.concatenate(results).astype(samples.dtype)
     return filtered_samples
 
+def normalize_volume(samples):
+    samples /= numpy.max(numpy.abs(samples), axis=0)
+    return samples
+
 def downsample(samples, samplerate, max_frequency):
     # First find minimum samplerate multiplier to satisfy nyquist
     q = 1

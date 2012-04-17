@@ -6,6 +6,7 @@ def preprocess_audio(audio, samplerate):
     """
     audio = filtering.band_pass_filter(audio, samplerate, 400, 3000)
     audio, new_samplerate = filtering.downsample(audio, samplerate, 3000)
+    audio = filtering.normalize_volume(audio)
     return audio, new_samplerate
 
 WINDOW_SIZE = 60    # Search window size in seconds
