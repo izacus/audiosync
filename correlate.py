@@ -1,6 +1,7 @@
 import multiprocessing
 from scipy import signal
 import itertools
+import datetime
 import numpy
 
 def _get_correlation(args):
@@ -14,6 +15,9 @@ def _get_fft_correlation(args):
     return corr
 
 def correlate(samples1, samples2, method="corr"):
+    """
+    This code currently produces wrong results, will be useful after multithreaded aspects are fixed
+    """
     samples1 = samples1.astype(float)
     samples2 = samples2.astype(float)
     samples_list = numpy.array_split(samples1, multiprocessing.cpu_count() - 1)
@@ -31,7 +35,9 @@ def correlate(samples1, samples2, method="corr"):
 
 def get_offset(samples1, samples2, samplerate):
     # Calculate correlation between samples
-    correlation = correlate(samples1, samples2, method="fft")
+    #correlation = correlate(samples1, samples2, method="fft")
+
+    correlation = _get_fft_correlation((samples1, samples2))
     # Find maximum positive value
     max = numpy.argmax(correlation)
     # Now calculate actual offset in seconds

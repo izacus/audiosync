@@ -46,7 +46,10 @@ def get_audio_from_file(filename):
             break
 
     # Reshape to match channels
-    file_data = numpy.reshape(file_data, (-1, source.audio_format.channels))
-    # Flatten channels to mono if audio is stereo
-    file_data = (file_data[:,0] + file_data[:, 1]) / 2
+    assert source.audio_format.channels == 2 or source.audio_format.channels == 1
+    if source.audio_format.channels == 2:
+        if len(file_data) % 2 == 1: file_data.resize(len(file_data) + 1)    # Pad with zero if length is odd
+        file_data = numpy.reshape(file_data, (-1, source.audio_format.channels))
+        # Flatten channels to mono if audio is stereo
+        file_data = (file_data[:,0] + file_data[:, 1]) / 2
     return file_data, source.audio_format.sample_rate
