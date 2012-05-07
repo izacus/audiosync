@@ -1,7 +1,6 @@
 import multiprocessing
 from scipy import signal
 import itertools
-import datetime
 import numpy
 
 def _get_correlation(args):

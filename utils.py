@@ -5,9 +5,9 @@ def get_audio_from_file(filename):
     Extracts audio data from video file in mono
     Returns tuple of (sample_rate, numpy samples array)
     """
-    import pyglet
+    import pyvideo
 
-    source = pyglet.media.load(filename, skip_video=True)
+    source = pyvideo.load(filename, skip_video=True)
     video_ts = source.get_next_video_timestamp()
 
     num_samples = source.duration * source.audio_format.sample_rate * source.audio_format.channels
