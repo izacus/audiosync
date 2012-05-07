@@ -1,9 +1,12 @@
+import logging
 import multiprocessing
 from scipy import signal
 import scipy.io.wavfile
 import itertools
 import numpy
 
+
+logger = logging.getLogger(__name__)
 def remove_channel(samples):
     return samples[:, 0]
 
@@ -40,7 +43,7 @@ def downsample(samples, samplerate, max_frequency):
     while samplerate / (q + 1) > (max_frequency * 2):
         q += 1
 
-    print "[DECIMATE] Found decimation factor: %s (%s -> %s)" % (q, samplerate, samplerate / q)
+    logger.debug("[DECIMATE] Found decimation factor: %s (%s -> %s)" % (q, samplerate, samplerate / q))
     decimated_samples = signal.decimate(samples, q).astype(samples.dtype)
     return decimated_samples, samplerate / q
 

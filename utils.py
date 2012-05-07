@@ -34,7 +34,6 @@ def get_audio_from_file(filename):
 
             percent = int(video_ts * 100 / source.duration)
             if percent != last:
-                print percent, "\r",
                 last = percent
 
         data = numpy.fromstring(audio_data.get_string_data(), dtype=file_data.dtype)
@@ -42,7 +41,6 @@ def get_audio_from_file(filename):
             file_data[counter:counter + data.shape[0]] = data
             counter += len(data)
         else:
-            print "WARNING: skipping file piece"
             break
 
     # Reshape to match channels

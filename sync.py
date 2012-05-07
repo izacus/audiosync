@@ -1,4 +1,7 @@
+import logging
 from audiosync import utils, filtering, correlate
+
+logger = logging.getLogger(__name__)
 
 def preprocess_audio(audio, samplerate):
     """
@@ -21,18 +24,18 @@ def find_offset(target, source, source_offset):
     Returns offset in target file in seconds
     """
     if isinstance(target, basestring):
-        print "Target file passed as filepath, loading..."
+        logger.debug("Target file passed as filepath, loading...")
         target_audio, target_samplerate = utils.get_audio_from_file(target)
         target_audio, target_samplerate = preprocess_audio(target_audio, target_samplerate)
-        print "Loaded."
+        logger.debug("Loaded.")
     else:
         target_audio, target_samplerate = target
 
     if isinstance(source, basestring):
-        print "Source file passed as filepath, loading..."
+        logger.debug("Source file passed as filepath, loading...")
         source_audio, source_samplerate = utils.get_audio_from_file(source)
         source_audio, source_samplerate = preprocess_audio(source_audio, source_samplerate)
-        print "Done."
+        logger.debug("Done.")
     else:
         source_audio, source_samplerate = source
 
@@ -42,9 +45,6 @@ def find_offset(target, source, source_offset):
     start_index = max(0, (source_offset * source_samplerate) - ((WINDOW_SIZE * source_samplerate) / 2))
     end_index = min(len(source_audio) - 1, (source_offset * source_samplerate) + ((WINDOW_SIZE * source_samplerate)/ 2))
 
-    print "Start", start_index, "End", end_index
-
     source_slice = source_audio[start_index:end_index]
-    print "Slice ok, correlating..."
     offset, correlation = correlate.get_offset(source_slice, target_audio, source_samplerate)
     return offset
