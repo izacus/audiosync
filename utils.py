@@ -20,7 +20,7 @@ def get_audio_from_file(filename):
     counter = 0
     last = 0
     while True:
-        audio_data = source._get_audio_data(8192)
+        audio_data = source.get_audio_data()
 
         if audio_data is None:
             break
