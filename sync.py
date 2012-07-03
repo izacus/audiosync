@@ -3,11 +3,12 @@ from audiosync import utils, filtering, correlate
 
 logger = logging.getLogger(__name__)
 
-def preprocess_audio(audio, samplerate):
+def preprocess_audio(audio, samplerate, bandpass=True):
     """
     Preprocesses audio track for matching
     """
-    audio = filtering.band_pass_filter(audio, samplerate, 400, 3000)
+    if bandpass:
+        audio = filtering.band_pass_filter(audio, samplerate, 400, 3000)
     audio, new_samplerate = filtering.downsample(audio, samplerate, 3000)
     audio = filtering.normalize_volume(audio)
     return audio, new_samplerate

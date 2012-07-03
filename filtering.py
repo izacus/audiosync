@@ -4,6 +4,7 @@ from scipy import signal
 import scipy.io.wavfile
 import itertools
 import numpy
+import gc
 
 
 logger = logging.getLogger(__name__)
@@ -31,6 +32,7 @@ def band_pass_filter(samples, samplerate, low_hz, high_hz):
     worker_pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
     results = worker_pool.map(_do_filter, itertools.izip(samples_list, itertools.repeat(fir_window)))
     filtered_samples = numpy.concatenate(results).astype(samples.dtype)
+    print "Filtered samples len ", len(filtered_samples)
     return filtered_samples
 
 def normalize_volume(samples):
