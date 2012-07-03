@@ -8,9 +8,9 @@ def _get_correlation(args):
     corr = signal.correlate(samples1, samples2, mode="same")
     return corr
 
-def _get_fft_correlation(args):
-    samples1, samples2 = args
-    corr = signal.fftconvolve(samples1, samples2[::-1])
+def _get_fft_correlation(samples1, samples2):
+    samples2 = samples2[::-1]
+    corr = signal.fftconvolve(samples1, samples2)
     return corr
 
 def correlate(samples1, samples2, method="corr"):
@@ -34,12 +34,11 @@ def correlate(samples1, samples2, method="corr"):
 
 def get_offset(samples1, samples2, samplerate):
     # Calculate correlation between samples
-    #correlation = correlate(samples1, samples2, method="fft")
 
-    correlation = _get_fft_correlation((samples1, samples2))
+    correlation = _get_fft_correlation(samples1, samples2)
     # Find maximum positive value
     max = numpy.argmax(correlation)
     # Now calculate actual offset in seconds
     # 0 offset will have a peak at len(samples2)
     offset = float(len(samples2) - max) / float(samplerate)
-    return offset, correlation
+    return offset
